@@ -26,8 +26,8 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var loss = Math.round(cash - profit);
         var result = '<tr><td>' + invest1 + '</td><td>' + n1 + '</td><td>' + team1 + '</td></tr>';
         result += '<tr><td>' + invest2 + '</td><td>' + n2 + '</td><td>' + team2 + '</td></tr>';
-        result += (profit1 > cash || profit2 > cash) ? '<tr><td colspan="3">Profitable</td></tr>' : '<tr><td colspan="3">Loss of ' + loss + '</td></tr>';
-        result += '<tr><td colspan="3">Profit of ' + profit + '</td></tr>';
+        result += (profit1 > cash || profit2 > cash) ? '<tr><td colspan="3">Profitable</td></tr>' : '<tr><td colspan="3">Loss = ' + loss + '</td></tr>';
+        result += '<tr><td colspan="3">Profit if both hit six = ' + profit + '</td></tr>';
         document.getElementById('result').innerHTML = result;
     });
 });
