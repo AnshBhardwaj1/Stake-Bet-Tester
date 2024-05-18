@@ -1,4 +1,10 @@
-var cash = 2000;
+var cash = 1000;
+var oldRates = [0, 0]; 
+var pinvested = [0, 0]; 
+var highestObservedOdds = [0, 0];
+var cashoutThreshold = [0, 0];
+var oversPassed = false; 
+
 chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     console.log('Sending message to content script');
     chrome.tabs.sendMessage(tabs[0].id, {message: "get_data"}, function(response) {
@@ -18,16 +24,72 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
             document.getElementById('result').innerHTML = '<tr><td colspan="3">Invalid data</td></tr>';
             return;
         }
-        var invest1 = Math.round((cash / (1 + n1/n2)) * 100) / 100;
-        var invest2 = Math.round(cash - invest1);
-        var profit1 = Math.round(invest1 * n1 * 100) / 100;
-        var profit2 = Math.round(invest2 * n2 * 100) / 100;
+
+        if (!oversPassed) {
+            updateHighestOdds(n1, n2);
+        }
+
+        if (oldRates[0] === 0 && oldRates[1] === 0) {
+            var invest1 = Math.round(((cash / (1 + n1 / n2)) * 100) / 100);
+            var invest2 = Math.round(cash - invest1);
+            pinvested = [invest1, invest2]; 
+            oldRates = [n1, n2]; 
+        }
+
+        if (someConditionToCheckIf8OversHavePassed() && !oversPassed) {
+            calculateCashoutThresholds();
+            oversPassed = true;
+        }
+
+        var profit1 = Math.round(pinvested[0] * n1 * 100) / 100;
+        var profit2 = Math.round(pinvested[1] * n2 * 100) / 100;
         var profit = Math.round((profit1 + profit2) / 2);
         var loss = Math.round(cash - profit);
-        var result = '<tr><td>' + invest1 + '</td><td>' + n1 + '</td><td>' + team1 + '</td></tr>';
-        result += '<tr><td>' + invest2 + '</td><td>' + n2 + '</td><td>' + team2 + '</td></tr>';
+        var result = '<tr><td>' + pinvested[0] + '</td><td>' + n1 + '</td><td>' + team1 + '</td></tr>';
+        result += '<tr><td>' + pinvested[1] + '</td><td>' + n2 + '</td><td>' + team2 + '</td></tr>';
         result += (profit1 > cash || profit2 > cash) ? '<tr><td colspan="3">Profitable</td></tr>' : '<tr><td colspan="3">Loss = ' + loss + '</td></tr>';
         result += '<tr><td colspan="3">Profit if both hit six = ' + profit + '</td></tr>';
+        var cashoutResult1 = calculateCashout(n1, 0);
+        var cashoutResult2 = calculateCashout(n2, 1);
+        result += '<tr><td colspan="3">Current Cashout for ' + team1 + ' = ' + Math.round(cashoutResult1.cashout) + '</td></tr>';
+        result += '<tr><td colspan="3">Current Cashout for ' + team2 + ' = ' + Math.round(cashoutResult2.cashout) + '</td></tr>';
+        result += '<tr><td colspan="3">If Six is hit  = ' + Math.round(cashoutResult1.cashout_onesix) + '</td></tr>';
+        result += '<tr><td colspan="3">Optimal Exit Point for ' + team1 + ' = ' + cashoutResult1.optimal_exit + '</td></tr>';
+        result += '<tr><td colspan="3">Optimal Exit Point for ' + team2 + ' = ' + cashoutResult2.optimal_exit + '</td></tr>';
         document.getElementById('result').innerHTML = result;
     });
 });
+
+function updateHighestOdds(n1, n2) {
+    if (highestObservedOdds[0] < n1) {
+        highestObservedOdds[0] = n1;
+    }
+    if (highestObservedOdds[1] < n2) {
+        highestObservedOdds[1] = n2;
+    }
+}
+
+function calculateCashoutThresholds() {
+    cashoutThreshold[0] = (oldRates[0] / highestObservedOdds[0]) * 0.9 * pinvested[0];
+    cashoutThreshold[1] = (oldRates[1] / highestObservedOdds[1]) * 0.9 * pinvested[1];
+}
+
+function calculateCashout(newRate, teamIndex) {
+    var cashout = (oldRates[teamIndex] / newRate) * pinvested[teamIndex] * 0.8;
+    var profit = cashout - pinvested[teamIndex];
+    var cashout_onesix = cashout + profit - cash;
+    var optimal_exit = cashout > cashoutThreshold[teamIndex] ? "Yes" : "No";
+    return {cashout: cashout, cashout_onesix: cashout_onesix, optimal_exit: optimal_exit};
+}
+
+function someConditionToCheckIf8OversHavePassed() {
+    var overDiv = document.querySelector('.sr-simcrick-scb__status');
+    if (!overDiv) {
+        console.log('Over div not found');
+        return false;
+    }
+    var currentOver = overDiv.getElementsByTagName('span')[2].textContent.trim();
+    var overNumber = parseFloat(currentOver.split('/')[0]);
+    console.log('Current over:', overNumber);
+    return overNumber >= 8;
+}
