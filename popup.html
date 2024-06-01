@@ -5,45 +5,53 @@
     <style>
         body {
             padding: 20px;
-            background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
+            background-color: #0b0e11; 
+            color: #c0c0c0; 
+            font-family: 'Arial', sans-serif; 
         }
         .container {
             max-width: 600px;
             margin: auto;
             padding: 20px;
             border-radius: 10px;
-            background-color: #ffffff;
+            background-color: #1b1e23; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         h2 {
             margin-bottom: 20px;
             font-weight: bold;
-            color: #007bff;
+            color: #1ec27e; 
         }
         .table {
             margin-bottom: 0;
+            color: #c0c0c0; 
         }
         .table th, .table td {
             vertical-align: middle;
+            color: #c0c0c0;
+            border-color: #c0c0c0;
         }
+        .table thead th {
+        background-color: #2a2d34; /* dark background */
+        color: #c0c0c0; /* light text */
+    }
         .result {
             font-size: 1.2em;
-            color: #333;
+            color: #c0c0c0;
             margin-top: 20px;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #2a2d34; 
             border-radius: 5px;
-            background-color: #f8f9fa;
+            background-color: #1b1e23;
         }
         .profit, .loss {
             font-weight: bold;
         }
         .profit {
-            color: green;
+            color: #1ec27e;/
         }
         .loss {
-            color: red;
+            color: #ff4d4f; 
         }
     </style>
 </head>
@@ -53,7 +61,7 @@
             <h2>Bet Calculator</h2>
         </div>
         <table class="table table-bordered">
-            <thead class="thead-light">
+            <thead >
                 <tr>
                     <th scope="col">Investment</th>
                     <th scope="col">Rate</th>
@@ -66,7 +74,6 @@
                 </tr>
             </tbody>
         </table>
-        <div class="result" id="additionalResults"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

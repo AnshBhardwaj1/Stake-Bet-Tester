@@ -61,7 +61,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var loss = Math.round(cash - profit);
         var result = '<tr><td>' + pinvested[0] + '</td><td>' + n1 + '</td><td>' + team1 + '</td></tr>';
         result += '<tr><td>' + pinvested[1] + '</td><td>' + n2 + '</td><td>' + team2 + '</td></tr>';
-        result += (profit1 > cash || profit2 > cash) ? '<tr><td colspan="3" class="profit">Profitable</td></tr>' : '<tr><td colspan="3" class="loss">Loss = ' + loss + '</td></tr>';
+        result += (profit1 > cash || profit2 > cash) ? '<tr><td colspan="3">Profitable</td></tr>' : '<tr><td colspan="3">Loss = ' + loss + '</td></tr>';
         result += '<tr><td colspan="3">Profit if both hit six = ' + profit + '</td></tr>';
         var cashoutResult1 = calculateCashout(n1, 0);
         var cashoutResult2 = calculateCashout(n2, 1);
@@ -93,4 +93,14 @@ function calculateCashout(newRate, teamIndex) {
     return {cashout: cashout, cashout_onesix: cashout_onesix, optimal_exit: optimal_exit};
 }
 
-
+function someConditionToCheckIf8OversHavePassed() {
+    var overDiv = document.querySelector('.sr-simcrick-scb__status');
+    if (!overDiv) {
+        console.log('Over div not found');
+        return false;
+    }
+    var currentOver = overDiv.getElementsByTagName('span')[2].textContent.trim();
+    var overNumber = parseFloat(currentOver.split('/')[0]);
+    console.log('Current over:', overNumber);
+    return overNumber >= 8;
+}
