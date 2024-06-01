@@ -4,22 +4,56 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         body {
-            padding: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .table {
+            margin-bottom: 0;
+        }
+        .table th, .table td {
+            vertical-align: middle;
         }
         .result {
             font-size: 1.2em;
             color: #333;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .profit, .loss {
+            font-weight: bold;
+        }
+        .profit {
+            color: green;
+        }
+        .loss {
+            color: red;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="text-center">
-            <h2 class="my-4">Bet Calculator</h2>
-            
+            <h2>Bet Calculator</h2>
         </div>
-        <table class="table table-striped" id="resultTable">
-            <thead>
+        <table class="table table-bordered">
+            <thead class="thead-light">
                 <tr>
                     <th scope="col">Investment</th>
                     <th scope="col">Rate</th>
@@ -27,8 +61,12 @@
                 </tr>
             </thead>
             <tbody id="result">
+                <tr>
+                    <td colspan="3">Loading data...</td>
+                </tr>
             </tbody>
         </table>
+        <div class="result" id="additionalResults"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

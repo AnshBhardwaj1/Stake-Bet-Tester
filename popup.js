@@ -30,8 +30,22 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         }
 
         if (oldRates[0] === 0 && oldRates[1] === 0) {
-            var invest1 = Math.round(((cash / (1 + n1 / n2)) * 100) / 100);
-            var invest2 = Math.round(cash - invest1);
+            var invest1_raw = Math.round(((cash / (1 + n1 / n2)) * 100) / 100);
+            var invest2_raw = Math.round(cash - invest1_raw);
+            var factor;
+            var invest1;
+            var invest2;
+            if (invest1_raw > invest2_raw){
+                factor = 500/invest2_raw;
+                invest1 = Math.round(factor*invest1_raw);
+                invest2 = 500;
+            }
+            else{
+                factor = 500/invest1_raw;
+                invest2 = Math.round(factor*invest2_raw);
+                invest1 = 500;
+            }
+            cash = invest1+invest2;
             pinvested = [invest1, invest2]; 
             oldRates = [n1, n2]; 
         }
@@ -47,15 +61,12 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var loss = Math.round(cash - profit);
         var result = '<tr><td>' + pinvested[0] + '</td><td>' + n1 + '</td><td>' + team1 + '</td></tr>';
         result += '<tr><td>' + pinvested[1] + '</td><td>' + n2 + '</td><td>' + team2 + '</td></tr>';
-        result += (profit1 > cash || profit2 > cash) ? '<tr><td colspan="3">Profitable</td></tr>' : '<tr><td colspan="3">Loss = ' + loss + '</td></tr>';
+        result += (profit1 > cash || profit2 > cash) ? '<tr><td colspan="3" class="profit">Profitable</td></tr>' : '<tr><td colspan="3" class="loss">Loss = ' + loss + '</td></tr>';
         result += '<tr><td colspan="3">Profit if both hit six = ' + profit + '</td></tr>';
         var cashoutResult1 = calculateCashout(n1, 0);
         var cashoutResult2 = calculateCashout(n2, 1);
         result += '<tr><td colspan="3">Current Cashout for ' + team1 + ' = ' + Math.round(cashoutResult1.cashout) + '</td></tr>';
         result += '<tr><td colspan="3">Current Cashout for ' + team2 + ' = ' + Math.round(cashoutResult2.cashout) + '</td></tr>';
-        result += '<tr><td colspan="3">If Six is hit  = ' + Math.round(cashoutResult1.cashout_onesix) + '</td></tr>';
-        result += '<tr><td colspan="3">Optimal Exit Point for ' + team1 + ' = ' + cashoutResult1.optimal_exit + '</td></tr>';
-        result += '<tr><td colspan="3">Optimal Exit Point for ' + team2 + ' = ' + cashoutResult2.optimal_exit + '</td></tr>';
         document.getElementById('result').innerHTML = result;
     });
 });
@@ -82,14 +93,4 @@ function calculateCashout(newRate, teamIndex) {
     return {cashout: cashout, cashout_onesix: cashout_onesix, optimal_exit: optimal_exit};
 }
 
-function someConditionToCheckIf8OversHavePassed() {
-    var overDiv = document.querySelector('.sr-simcrick-scb__status');
-    if (!overDiv) {
-        console.log('Over div not found');
-        return false;
-    }
-    var currentOver = overDiv.getElementsByTagName('span')[2].textContent.trim();
-    var overNumber = parseFloat(currentOver.split('/')[0]);
-    console.log('Current over:', overNumber);
-    return overNumber >= 8;
-}
+
