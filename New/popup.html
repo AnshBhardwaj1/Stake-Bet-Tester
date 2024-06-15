@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Investment Calculator</title>
+        <script src="popup.js"></script>
+        <style>
+            body {
+                padding: 20px;
+                background-color: #0b0e11; 
+                color: #c0c0c0; 
+                font-family: 'Arial', sans-serif; 
+            }
+            .container {
+                max-width: 600px;
+                margin: auto;
+                padding: 20px;
+                border-radius: 10px;
+                background-color: #1b1e23; 
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            h2 {
+                margin-bottom: 20px;
+                font-weight: bold;
+                color: #1ec27e; 
+            }
+            .table {
+                margin-bottom: 0;
+                color: #c0c0c0; 
+            }
+            .table th, .table td {
+                vertical-align: middle;
+                color: #c0c0c0;
+                border-color: #c0c0c0;
+            }
+            .table thead th {
+            background-color: #2a2d34; /* dark background */
+            color: #c0c0c0; /* light text */
+        }
+            .result {
+                font-size: 1.2em;
+                color: #c0c0c0;
+                margin-top: 20px;
+                padding: 10px;
+                border: 1px solid #2a2d34; 
+                border-radius: 5px;
+                background-color: #1b1e23;
+            }
+            .profit, .loss {
+                font-weight: bold;
+            }
+            .profit {
+                color: #1ec27e;/
+            }
+            .loss {
+                color: #ff4d4f; 
+            }
+            input {
+                background-color: #2a2d34; /* dark background */
+                color: #c0c0c0; /* light text */
+                border: white;
+                padding: 5px;
+}
+
+            button {
+                background-color: #2a2d34; /* dark background */
+                color: #c0c0c0; /* light text */
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            button:hover {
+                background-color: #1b1e23; /* slightly lighter dark color on hover */
+            }
+            #result table {
+                border-collapse: collapse;
+                width: 100%;
+                color: #c0c0c0;
+            }
+
+            #result th, #result td {
+                border: 1px solid #c0c0c0;
+                padding: 8px;
+                text-align: left;
+            }
+
+            #result th {
+                background-color: #2a2d34;
+                color: #c0c0c0;
+            }
+        </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Bet Calculator</h2>
+        <div style="display: flex; justify-content: space-between;">
+            <div style="display: none;">    
+                <input type="number" id="n1" name="n1" step="0.01" placeholder="Odds1" style="width: 100px;">
+            </div>
+            <div style="display: none;">
+                <input type="number" id="n2" name="n2" step="0.01" placeholder="Odds2" style="width: 100px;">
+            </div>
+        </div>
+        <br>
+        <button id="calculate" style="display: none;">Calculate</button>
+        <div id="result" class="result"></div>
+    </div>
+</body>
+</html>
+</html>

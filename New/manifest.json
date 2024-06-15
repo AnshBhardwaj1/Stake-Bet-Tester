@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "Investment Calculator",
+    "version": "1.0",
+    "description": "A simple investment calculator.",
+    "browser_action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+            "16": "images/favicon-16x16.png",
+            "32": "images/favicon-32x32.png"
+        }
+    },
+    "permissions": ["activeTab"],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ]
+}

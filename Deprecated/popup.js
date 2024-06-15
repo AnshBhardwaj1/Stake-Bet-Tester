@@ -10,7 +10,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {message: "get_data"}, function(response) {
         if (chrome.runtime.lastError || !response || !response.data || !response.teamNames || response.teamNames.length < 2) {
             console.log('Failed to get data');
-            document.getElementById('result').innerHTML = '<tr><td colspan="3">Failed to get data</td></tr>';
+            document.getElementById('result').innerHTML = '<tr><td colspan="3">Failed to gaet data</td></tr>';
             return;
         }
         console.log('Received response from content script', response);
@@ -62,7 +62,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         var result = '<tr><td>' + pinvested[0] + '</td><td>' + n1 + '</td><td>' + team1 + '</td></tr>';
         result += '<tr><td>' + pinvested[1] + '</td><td>' + n2 + '</td><td>' + team2 + '</td></tr>';
         result += (profit1 > cash || profit2 > cash) ? '<tr><td colspan="3">Profitable</td></tr>' : '<tr><td colspan="3">Loss = ' + loss + '</td></tr>';
-        result += '<tr><td colspan="3">Profit if both hit six = ' + profit + '</td></tr>';
+        result += '<tr><td colspan="3">Profit if promo happens = ' + profit + '</td></tr>';
         var cashoutResult1 = calculateCashout(n1, 0);
         var cashoutResult2 = calculateCashout(n2, 1);
         result += '<tr><td colspan="3">Current Cashout for ' + team1 + ' = ' + Math.round(cashoutResult1.cashout) + '</td></tr>';
@@ -71,14 +71,7 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     });
 });
 
-function updateHighestOdds(n1, n2) {
-    if (highestObservedOdds[0] < n1) {
-        highestObservedOdds[0] = n1;
-    }
-    if (highestObservedOdds[1] < n2) {
-        highestObservedOdds[1] = n2;
-    }
-}
+
 
 function calculateCashoutThresholds() {
     cashoutThreshold[0] = (oldRates[0] / highestObservedOdds[0]) * 0.9 * pinvested[0];
@@ -93,14 +86,3 @@ function calculateCashout(newRate, teamIndex) {
     return {cashout: cashout, cashout_onesix: cashout_onesix, optimal_exit: optimal_exit};
 }
 
-function someConditionToCheckIf8OversHavePassed() {
-    var overDiv = document.querySelector('.sr-simcrick-scb__status');
-    if (!overDiv) {
-        console.log('Over div not found');
-        return false;
-    }
-    var currentOver = overDiv.getElementsByTagName('span')[2].textContent.trim();
-    var overNumber = parseFloat(currentOver.split('/')[0]);
-    console.log('Current over:', overNumber);
-    return overNumber >= 8;
-}
